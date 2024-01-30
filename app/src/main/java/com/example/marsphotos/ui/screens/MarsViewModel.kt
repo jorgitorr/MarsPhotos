@@ -33,7 +33,8 @@ sealed interface MarsUiState {
 
 class MarsViewModel : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
-    var marsUiState: String by mutableStateOf("")
+    //volvemos al estado predeterminado : marsUiState.Loading
+    var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)
         private set
 
     /**
@@ -51,7 +52,7 @@ class MarsViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val listResult = MarsApi.retrofitService.getPhotos()
-                marsUiState = listResult
+                marsUiState = MarsUiState.Success(listResult)
             } catch (e: IOException) {
 
             }
