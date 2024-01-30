@@ -15,13 +15,19 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)//se le pasa la url base de la API
     .build()//crea el objeto Retrofit
 
+
 interface MarsApiService {
-    interface MarsApiService {
+        //agrega a la URL base \photos
         @GET("photos")
-        fun getPhotos(): String
-    }
+        suspend fun getPhotos(): String
 }
 
-object MarsApi{
 
+//objeto MarsApi para inicializar el servicio de Retrofit
+//cada vez que se llame a MarsApi.retrofitService se llamará al mismo singleton que implementa
+//MarsApiService
+object MarsApi {
+    val retrofitService : MarsApiService by lazy {
+        retrofit.create(MarsApiService::class.java)
+    }
 }
