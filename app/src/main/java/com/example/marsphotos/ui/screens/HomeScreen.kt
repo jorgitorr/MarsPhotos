@@ -102,6 +102,7 @@ fun ResultScreenPreview() {
     }
 }
 
+
 /**
  * Elemento que muestra la imagen de Marte
  */
