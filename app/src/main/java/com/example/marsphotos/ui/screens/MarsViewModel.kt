@@ -21,12 +21,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marsphotos.network.MarsApi
+import com.example.marsphotos.network.MarsPhoto
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 
 sealed interface MarsUiState {
-    data class Success(val photos: String) : MarsUiState
+    data class Success(val photos: MarsPhoto) : MarsUiState//cambiamos String por objeto MarsPhoto
     object Error : MarsUiState
     object Loading : MarsUiState
 }
@@ -52,7 +53,7 @@ class MarsViewModel : ViewModel() {
         viewModelScope.launch {
             marsUiState = try {
                 val result = MarsApi.retrofitService.getPhotos()[0]//obtenemos una sola foto
-                MarsUiState.Success("Success: ${result.imgSrc} Mars photos retrieved")
+                MarsUiState.Success(result)//le pasamos la foto por Success
             } catch (e: IOException) {
                 MarsUiState.Error
             }
