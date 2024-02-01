@@ -19,10 +19,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -46,7 +50,8 @@ fun HomeScreen(
 ) {
     when (marsUiState) {
         is MarsUiState.Loading -> LoadingScreen(modifier = modifier)
-        is MarsUiState.Success -> MarsPhotoCard(photo = marsUiState.photos, modifier = modifier)
+        //is MarsUiState.Success -> MarsPhotoCard(photo = marsUiState.photos, modifier = modifier)
+        is MarsUiState.Success -> PhotosGridScreen(marsUiState.photos, modifier)
         else -> ErrorScreen(modifier = modifier)
     }
 }
@@ -115,6 +120,22 @@ fun MarsPhotoCard(photo: MarsPhoto, modifier: Modifier = Modifier) {
             .build(),
         contentDescription = stringResource(R.string.mars_photo),
         contentScale = ContentScale.Crop,//llena el espacio disponible en pantalla
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        error = painterResource(R.drawable.ic_broken_image),
+        placeholder = painterResource(R.drawable.loading_img)//este elemento se pone cuando carga
     )
+}
+
+
+@Composable
+fun PhotosGridScreen(photos: List<MarsPhoto>, modifier: Modifier = Modifier) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(150.dp),
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(4.dp)
+    ) {
+        items(items = photos, key = { photo -> photo.id }) {
+            photo -> MarsPhotoCard(photo = photo)
+        }
+    }
 }

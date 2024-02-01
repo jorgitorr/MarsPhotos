@@ -27,7 +27,8 @@ import java.io.IOException
 
 
 sealed interface MarsUiState {
-    data class Success(val photos: MarsPhoto) : MarsUiState//cambiamos String por objeto MarsPhoto
+    //data class Success(val photos: MarsPhoto) : MarsUiState//cambiamos String por objeto MarsPhoto
+    data class Success(val photos: List<MarsPhoto>) : MarsUiState//cambiamos objeto por lista de objetos
     object Error : MarsUiState
     object Loading : MarsUiState
 }
@@ -52,7 +53,7 @@ class MarsViewModel : ViewModel() {
     private fun getMarsPhotos() {
         viewModelScope.launch {
             marsUiState = try {
-                val result = MarsApi.retrofitService.getPhotos()[0]//obtenemos una sola foto
+                val result = MarsApi.retrofitService.getPhotos()//obtenemos una sola foto
                 MarsUiState.Success(result)//le pasamos la foto por Success
             } catch (e: IOException) {
                 MarsUiState.Error
